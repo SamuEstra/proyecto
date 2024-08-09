@@ -3,26 +3,28 @@
     <div class="heading ion-padding">
       <h1 style="color: black;">Bienvenidos</h1>
     </div>
-    <div class="login-form ion-padding">
+    <form [formGroup]="formulario" (ngSubmit)="login()" class="login-form ion-padding">
       <div class="form-input">
         <ion-icon name="mail-outline"></ion-icon>
         <ion-item>
-          <ion-label position="floating">Correo Electronico</ion-label>
-          <ion-input type="email" [(ngModel)]="email"></ion-input>
+          <ion-label position="floating">Correo Electrónico</ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
         </ion-item>
       </div>
       <div class="form-input">
         <ion-icon name="lock-closed-outline"></ion-icon>
         <ion-item>
           <ion-label position="floating">Contraseña</ion-label>
-          <ion-input type="password" [(ngModel)]="password"></ion-input>
+          <ion-input type="password" formControlName="password"></ion-input>
         </ion-item>
       </div>
-    </div>
+      <div class="action-button ion-padding">
+        <ion-button size="large" class="login-button" type="submit" [disabled]="!formulario.valid" style="color: black;">Iniciar sesión</ion-button>
+      </div>
+    </form>
     <div class="action-button ion-padding">
-      <ion-button size="large" class="login-button" routerLink="/home" style="color: black;">Iniciar sesion</ion-button>
       <p>¿No tienes una cuenta?</p>
-      <ion-button class="signup-button" size="large" routerLink="/cuenta" fill="outline" style="color: black;">Registrate</ion-button>
+      <ion-button class="signup-button" size="large" (click)="goToRegister()" fill="outline" style="color: black;">Regístrate</ion-button>
     </div>
   </div>
 </ion-content>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
+import { AuthService } from '../services/Auth.service';
 
 @Component({
   selector: 'app-cuenta',
@@ -12,7 +13,8 @@ export class CuentaPage implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -32,12 +34,13 @@ export class CuentaPage implements OnInit {
 
   onRegister() {
     if (this.registerForm.valid) {
-      // Aquí podrías hacer la lógica para enviar los datos al backend
-      console.log(this.registerForm.value);
-      // Navegar a otra página después de registrarse
-      this.navCtrl.navigateRoot('/home');
+      const { email, password, nombre, apellido } = this.registerForm.value;
+      this.authService.register(email, password, nombre, apellido);
+    } else {
+      alert('Por favor, complete todos los campos correctamente.');
     }
   }
+  
 
   preventPaste(event: ClipboardEvent) {
     event.preventDefault();

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { AuthService } from './auth.service';
 import { MenuController } from '@ionic/angular';
+import { AuthService } from './services/Auth.service';
+
 
 @Component({
   selector: 'app-root',
@@ -9,14 +10,13 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  showMenu: boolean = false; // Variable para controlar la visibilidad del menú
+  showMenu: boolean = false;
 
   constructor(
     private router: Router,
-    private authService: AuthService,
-    private menuController: MenuController
+    private menuController: MenuController,
+    private authService: AuthService
   ) {
-    // Controlar la visibilidad del menú según la ruta activa
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showMenu = !['/login', '/registrarse'].includes(event.urlAfterRedirects);
@@ -24,20 +24,19 @@ export class AppComponent implements OnInit {
       }
     });
 
-    if (!this.authService.checkAuthentication()) {
+    // Redirige a login si no está autenticado
+    if (!this.authService.getUser()) {
       this.router.navigateByUrl('/login');
     }
   }
 
   ngOnInit() {
-    // Inicializar el estado del menú al cargar la aplicación
     this.showMenu = !['/login', '/registrarse'].includes(this.router.url);
     this.updateMenuVisibility();
   }
 
   logout() {
     this.authService.logout();
-    this.router.navigateByUrl('/login');
     this.menuController.close(); // Cierra el menú
   }
 
@@ -47,10 +46,6 @@ export class AppComponent implements OnInit {
   }
 
   updateMenuVisibility() {
-    if (this.showMenu) {
-      this.menuController.enable(true, 'first');
-    } else {
-      this.menuController.enable(false, 'first');
-    }
+    this.menuController.enable(this.showMenu, 'first');
   }
 }
